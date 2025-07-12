@@ -1,0 +1,247 @@
+db-1  | 
+db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+db-1  | 
+db-1  | 2025-07-12 03:20:13.046 UTC [1] LOG:  starting PostgreSQL 17.5 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 14.2.0) 14.2.0, 64-bit
+db-1  | 2025-07-12 03:20:13.047 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2025-07-12 03:20:13.047 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2025-07-12 03:20:13.048 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2025-07-12 03:20:13.053 UTC [30] LOG:  database system was shut down at 2025-07-08 23:05:57 UTC
+db-1  | 2025-07-12 03:20:13.059 UTC [1] LOG:  database system is ready to accept connections
+db-1  | 2025-07-12 03:25:13.130 UTC [28] LOG:  checkpoint starting: time
+db-1  | 2025-07-12 03:25:13.147 UTC [28] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.002 s, total=0.018 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/169FA20, redo lsn=0/169F9C8
+db-1  | 2025-07-12 06:44:52.951 UTC [28] LOG:  checkpoint starting: time
+db-1  | 2025-07-12 06:44:53.494 UTC [28] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.528 s, sync=0.006 s, total=0.544 s; sync files=2, longest=0.005 s, average=0.003 s; distance=30 kB, estimate=30 kB; lsn=0/16A72F0, redo lsn=0/16A7298
+app-1  | 
+app-1  | > jobparser@1.0.0 dev
+app-1  | > vite
+app-1  | 
+app-1  | 
+app-1  |   VITE v7.0.0  ready in 721 ms
+app-1  | 
+app-1  |   ➜  Local:   http://localhost:8787/
+app-1  |   ➜  Network: http://172.20.0.3:8787/
+app-1  | [32mGET[0m    /
+app-1  | [32mGET[0m    /entry/:id
+app-1  | [32mPOST[0m   /api/import
+app-1  | [32mPOST[0m   /api/entries/bulk
+app-1  | [32mPATCH[0m  /api/entries/:id
+app-1  | [32mGET[0m    /api/health
+app-1  | Query params: {
+app-1  |   status: undefined,
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" order by "entries"."updated_at" desc
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [72]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [70]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [67]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [59]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [60]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [52]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [51]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [53]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | 6:34:08 AM [vite] (client) ✨ new dependencies optimized: honox/client, hono/jsx, drizzle-orm/postgres-js, postgres, hono/jsx/jsx-dev-runtime, honox/vite/components
+app-1  | 6:34:08 AM [vite] (client) ✨ optimized dependencies changed. reloading
+app-1  | Query params: {
+app-1  |   status: undefined,
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" order by "entries"."updated_at" desc
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [72]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [70]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [67]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [59]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [60]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [52]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [51]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [53]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: 'GCP'
+app-1  | }
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" where "tags"."name" in ($1) -- params: ["GCP"]
+app-1  | Query: select "entry_id", count("tag_id") as "tag_count" from "entry_tags" where "entry_tags"."tag_id" in ($1) group by "entry_tags"."entry_id" having COUNT(DISTINCT "entry_tags"."tag_id") = $2 -- params: [17, 1]
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where ("entries"."status" = $1 and "entries"."id" in ($2, $3, $4)) order by "entries"."updated_at" desc -- params: ["reviewed", 51, 53, 57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where "entries"."status" = $1 order by "entries"."updated_at" desc -- params: ["reviewed"]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Parsed 1 entries with 0 errors
+app-1  | Query: select "id", "title" from "entries" where ("entries"."title" = $1 and "entries"."hash" = $2) limit $3 -- params: ["案件名：ノーコードSaaSサービスの開発", "QJ9J-OfLfIczAKsM", 1]
+app-1  | Query: select "hash" from "entries" where "entries"."id" = $1 limit $2 -- params: [68, 1]
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: 'true',
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where ("entries"."status" = $1 and "entries"."starred" = $2) order by "entries"."updated_at" desc -- params: ["reviewed", true]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where "entries"."status" = $1 order by "entries"."updated_at" desc -- params: ["reviewed"]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query: update "entries" set "starred" = $1, "updated_at" = $2 where "entries"."id" in ($3, $4, $5) -- params: [true, "2025-07-12T06:43:54.916Z", 50, 58, 61]
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where "entries"."status" = $1 order by "entries"."updated_at" desc -- params: ["reviewed"]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query: update "entries" set "starred" = $1, "updated_at" = $2 where "entries"."id" in ($3) -- params: [false, "2025-07-12T06:44:02.176Z", 71]
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where "entries"."status" = $1 order by "entries"."updated_at" desc -- params: ["reviewed"]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query: update "entries" set "starred" = $1, "updated_at" = $2 where "entries"."id" in ($3) -- params: [false, "2025-07-12T06:44:06.708Z", 69]
+app-1  | Query params: {
+app-1  |   status: 'reviewed',
+app-1  |   starred: undefined,
+app-1  |   search: undefined,
+app-1  |   sort: 'updatedAt',
+app-1  |   order: 'desc',
+app-1  |   selectedTags: undefined
+app-1  | }
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where "entries"."status" = $1 order by "entries"."updated_at" desc -- params: ["reviewed"]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [69]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [71]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [58]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [61]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [50]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [68]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [56]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [62]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [49]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [48]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [57]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [54]
+app-1  | Query: select "tags"."id", "tags"."name", "tags"."category", "tags"."created_at" from "entry_tags" left join "tags" on "entry_tags"."tag_id" = "tags"."id" where "entry_tags"."entry_id" = $1 -- params: [55]
+app-1  | Query: select "id", "name", "category", "created_at" from "tags" order by "tags"."category", "tags"."name"
+app-1  | Query: select "id", "title", "company", "distribution", "price", "period", "location", "billing", "interview", "time", "notes", "description", "requirements", "preferences", "tech_stack", "hash", "status", "comment", "starred", "created_at", "updated_at" from "entries" where "entries"."id" = $1 limit $2 -- params: [57, 1]
