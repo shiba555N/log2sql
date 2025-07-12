@@ -66,6 +66,45 @@
             text-align: center;
             padding: 20px;
         }
+        #patterns {
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        #patterns h2 {
+            color: #0056b3;
+            margin-bottom: 15px;
+        }
+        #pattern-list {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        #pattern-list li {
+            background-color: #f0f8ff;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border-left: 5px solid #28a745;
+        }
+        #pattern-list li:last-child {
+            margin-bottom: 0;
+        }
+        .pattern-count {
+            font-size: 0.8em;
+            color: #666;
+            font-weight: bold;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -84,10 +123,20 @@
         </ul>
     </div>
 
+    <div id="patterns">
+        <h2>SQLパターン（重複削除済み）</h2>
+        <ul id="pattern-list">
+            <li class="no-results">ファイルがドロップされていません。</li>
+        </ul>
+    </div>
+
     <script>
         const dropArea = document.getElementById('drop-area');
         const fileElem = document.getElementById('fileElem');
         const sqlList = document.getElementById('sql-list');
+        const patternList = document.getElementById('pattern-list');
+        
+        let sqlPatterns = new Map(); // パターンとその出現回数を記録
 
         // ドロップエリアをクリックでファイル選択ダイアログを開く
         dropArea.addEventListener('click', () => {
@@ -120,9 +169,12 @@
 
         function handleFiles(files) {
             sqlList.innerHTML = ''; // 既存の結果をクリア
+            patternList.innerHTML = ''; // パターンリストもクリア
+            sqlPatterns.clear(); // パターンマップもクリア
 
             if (files.length === 0) {
                 sqlList.innerHTML = '<li class="no-results">ファイルが選択されていません。</li>';
+                patternList.innerHTML = '<li class="no-results">ファイルが選択されていません。</li>';
                 return;
             }
 
@@ -132,6 +184,7 @@
                 reader.onload = (e) => {
                     const text = e.target.result;
                     processLogContent(text);
+                    updatePatternList(); // ファイル処理後にパターンリストを更新
                 };
 
                 reader.onerror = () => {
@@ -147,42 +200,57 @@
 
         function processLogContent(logContent) {
             const lines = logContent.split('\n');
-            let currentSql = '';
-            let currentParams = [];
             let foundSql = false;
 
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
 
-                // SQL文の行を検出
-                if (line.includes('Query: ') && !line.includes('-- params:')) {
-                    currentSql = line.substring(line.indexOf('Query: ') + 'Query: '.length).trim();
-                    currentParams = []; // 新しいSQLなのでパラメータをリセット
-                    // console.log("Detected SQL line:", currentSql);
-                }
-                // パラメータの行を検出
-                else if (line.includes('-- params: [')) {
-                    const paramsMatch = line.match(/-- params: \[(.*?)\]/);
-                    if (paramsMatch && paramsMatch[1]) {
-                        // パラメータを文字列として取得し、分割してトリム、JSON.parseを試みる
-                        currentParams = paramsMatch[1].split(',').map(p => {
-                            try {
-                                return JSON.parse(p.trim()); // 数値や真偽値なども適切にパース
-                            } catch (e) {
-                                return p.trim(); // JSONパースに失敗したら文字列として扱う
-                            }
-                        });
-                        // console.log("Detected params:", currentParams);
-
-                        // SQLとパラメータが揃ったので結合して表示
-                        if (currentSql) {
-                            const combinedSql = replaceParams(currentSql, currentParams);
+                // Query: で始まる行を検出
+                if (line.includes('Query: ')) {
+                    // Query: 以降のSQL文を取得
+                    let sqlPart = line.substring(line.indexOf('Query: ') + 'Query: '.length);
+                    
+                    // 同じ行にパラメータがある場合の処理
+                    let params = [];
+                    const paramsMatch = sqlPart.match(/(.+?)\s+--\s+params:\s+\[(.*)\]/);
+                    
+                    if (paramsMatch) {
+                        // 同じ行にパラメータがある場合
+                        const sql = paramsMatch[1].trim();
+                        const paramsStr = paramsMatch[2];
+                        
+                        if (paramsStr) {
+                            params = paramsStr.split(',').map(p => {
+                                try {
+                                    return JSON.parse(p.trim());
+                                } catch (e) {
+                                    return p.trim().replace(/^["']|["']$/g, ''); // 前後の引用符を削除
+                                }
+                            });
+                        }
+                        
+                        // パラメータ置換してSQL文を表示
+                        const combinedSql = replaceParams(sql, params);
+                        const li = document.createElement('li');
+                        li.textContent = addSemicolon(combinedSql);
+                        sqlList.appendChild(li);
+                        foundSql = true;
+                        
+                        // パターンを正規化してマップに追加
+                        const pattern = normalizePattern(sql);
+                        updatePatternCount(pattern);
+                    } else {
+                        // パラメータなしのSQL文
+                        const sql = sqlPart.trim();
+                        if (sql) {
                             const li = document.createElement('li');
-                            li.textContent = combinedSql;
+                            li.textContent = addSemicolon(sql);
                             sqlList.appendChild(li);
                             foundSql = true;
-                            currentSql = ''; // 処理済みなのでクリア
-                            currentParams = [];
+                            
+                            // パターンを正規化してマップに追加
+                            const pattern = normalizePattern(sql);
+                            updatePatternCount(pattern);
                         }
                     }
                 }
@@ -190,6 +258,7 @@
 
             if (!foundSql && sqlList.children.length === 0) {
                 sqlList.innerHTML = '<li class="no-results">SQL文が見つかりませんでした。</li>';
+                patternList.innerHTML = '<li class="no-results">SQL文が見つかりませんでした。</li>';
             }
         }
 
@@ -220,6 +289,71 @@
                 replacedSql = replacedSql.replace(placeholder, paramValue);
             }
             return replacedSql;
+        }
+
+        /**
+         * SQLパターンを正規化する関数
+         * プレースホルダーを統一して、同じ構造のSQLを同じパターンとして認識する
+         * @param {string} sql - 元のSQL文字列
+         * @returns {string} - 正規化されたSQLパターン
+         */
+        function normalizePattern(sql) {
+            let pattern = sql;
+            
+            // プレースホルダー ($1, $2, ...) を汎用的な ?に置換
+            pattern = pattern.replace(/\$\d+/g, '?');
+            
+            // 余分な空白を正規化
+            pattern = pattern.replace(/\s+/g, ' ').trim();
+            
+            return pattern;
+        }
+
+        /**
+         * パターンの出現回数を更新する関数
+         * @param {string} pattern - 正規化されたSQLパターン
+         */
+        function updatePatternCount(pattern) {
+            if (sqlPatterns.has(pattern)) {
+                sqlPatterns.set(pattern, sqlPatterns.get(pattern) + 1);
+            } else {
+                sqlPatterns.set(pattern, 1);
+            }
+        }
+
+        /**
+         * SQL文の末尾にセミコロンを追加する関数
+         * @param {string} sql - SQL文字列
+         * @returns {string} - セミコロンが付いたSQL文字列
+         */
+        function addSemicolon(sql) {
+            // 既にセミコロンで終わっている場合は追加しない
+            if (sql.trim().endsWith(';')) {
+                return sql;
+            }
+            return sql + ';';
+        }
+
+        /**
+         * パターンリストを更新する関数
+         */
+        function updatePatternList() {
+            patternList.innerHTML = '';
+            
+            if (sqlPatterns.size === 0) {
+                patternList.innerHTML = '<li class="no-results">パターンが見つかりませんでした。</li>';
+                return;
+            }
+            
+            // パターンを出現回数順（降順）でソート
+            const sortedPatterns = Array.from(sqlPatterns.entries())
+                .sort((a, b) => b[1] - a[1]);
+            
+            sortedPatterns.forEach(([pattern, count]) => {
+                const li = document.createElement('li');
+                li.innerHTML = addSemicolon(pattern) + '<span class="pattern-count">(×' + count + ')</span>';
+                patternList.appendChild(li);
+            });
         }
     </script>
 </body>
