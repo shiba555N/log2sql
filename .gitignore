@@ -23,3 +23,19 @@ yarn-error.log*
 # Temporary files
 *.tmp
 *.temp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+.env
+.venv
+env/
+venv/
