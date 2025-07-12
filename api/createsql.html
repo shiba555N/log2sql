@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL抽出ツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #0056b3;
+        }
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 50px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        #drop-area.highlight {
+            background-color: #e0e0e0;
+        }
+        #results, #patterns {
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h2 {
+            color: #0056b3;
+            margin-bottom: 15px;
+        }
+        #sql-list, #pattern-list {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        #sql-list li, #pattern-list li {
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        #sql-list li {
+            background-color: #f9f9f9;
+            border-left: 5px solid #007bff;
+        }
+        #pattern-list li {
+            background-color: #f0f8ff;
+            border-left: 5px solid #28a745;
+        }
+        .no-results {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+        .pattern-count {
+            font-size: 0.8em;
+            color: #666;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        #save-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        #save-button:hover {
+            background-color: #218838;
+        }
+        #save-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>ログファイルからSQLを抽出するよ</h1>
+
+    <div id="drop-area">
+        <p>ログファイルをここにドラッグ＆ドロップしてください</p>
+        <p>またはクリックしてファイルを選択</p>
+        <input type="file" id="fileElem" multiple accept=".log, .txt" style="display: none;">
+    </div>
+
+    <div id="results">
+        <h2>抽出されたSQL</h2>
+        <ul id="sql-list">
+            <li class="no-results">ファイルがドロップされていません。</li>
+        </ul>
+    </div>
+
+    <div id="patterns">
+        <h2>SQLパターン（重複削除済み）</h2>
+        <ul id="pattern-list">
+            <li class="no-results">ファイルがドロップされていません。</li>
+        </ul>
+    </div>
+
+    <button id="save-button" disabled>DBに保存</button>
+    <div id="status-message" style="display: none;"></div>
+
+    <script>
+        const dropArea = document.getElementById('drop-area');
+        const fileElem = document.getElementById('fileElem');
+        const sqlList = document.getElementById('sql-list');
+        const patternList = document.getElementById('pattern-list');
+        const saveButton = document.getElementById('save-button');
+        const statusMessage = document.getElementById('status-message');
+
+        let sqlPatterns = new Map();
+
+        dropArea.addEventListener('click', () => fileElem.click());
+        fileElem.addEventListener('change', (e) => handleFiles(e.target.files));
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('highlight');
+        });
+        dropArea.addEventListener('dragleave', () => dropArea.classList.remove('highlight'));
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('highlight');
+            handleFiles(e.dataTransfer.files);
+        });
+        saveButton.addEventListener('click', saveToDB);
+
+        function handleFiles(files) {
+            resetUI();
+            if (files.length === 0) {
+                showNoResults('ファイルが選択されていません。');
+                return;
+            }
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    processLogContent(e.target.result);
+                    updatePatternList();
+                    saveButton.disabled = sqlList.children.length === 0 || (sqlList.children.length === 1 && sqlList.children[0].classList.contains('no-results'));
+                };
+                reader.onerror = () => {
+                    const li = document.createElement('li');
+                    li.textContent = `ファイルの読み込み中にエラーが発生しました: ${file.name}`;
+                    li.style.color = 'red';
+                    sqlList.appendChild(li);
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        function resetUI() {
+            sqlList.innerHTML = '';
+            patternList.innerHTML = '';
+            sqlPatterns.clear();
+            saveButton.disabled = true;
+            statusMessage.style.display = 'none';
+        }
+
+        function showNoResults(message) {
+            sqlList.innerHTML = `<li class="no-results">${message}</li>`;
+            patternList.innerHTML = `<li class="no-results">${message}</li>`;
+        }
+
+        function processLogContent(logContent) {
+            const lines = logContent.split('\n');
+            let foundSql = false;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                
+                // ログ行からタイムスタンプを抽出する正規表現を改善
+                const timestampMatch = line.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/) || // ISO 8601 format (e.g., 2025-07-12T06:43:54.916Z)
+                                     line.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} UTC)/); // Postgres log format (e.g., 2025-07-12 03:20:13.046 UTC)
+                
+                // タイムスタンプが見つからない場合は、現在の時刻をデフォルト値として使用
+                const executedAt = timestampMatch ? new Date(timestampMatch[0].replace(' UTC', 'Z')).toISOString() : new Date().toISOString();
+
+                if (line.includes('Query: ')) {
+                    let sqlPart = line.substring(line.indexOf('Query: ') + 'Query: '.length);
+                    let params = [];
+                    const paramsMatch = sqlPart.match(/(.+?)\s+--\s+params:\s+\[(.*)\]/);
+
+                    let sql, combinedSql;
+                    if (paramsMatch) {
+                        sql = paramsMatch[1].trim();
+                        const paramsStr = paramsMatch[2];
+                        if (paramsStr) {
+                            params = paramsStr.split(',').map(p => {
+                                try { return JSON.parse(p.trim()); }
+                                catch (e) { return p.trim().replace(/^[\"']|[\"']$/g, ''); }
+                            });
+                        }
+                        combinedSql = replaceParams(sql, params);
+                    } else {
+                        sql = sqlPart.trim();
+                        combinedSql = sql;
+                    }
+
+                    if (sql) {
+                        const li = document.createElement('li');
+                        li.textContent = addSemicolon(combinedSql);
+                        // データ属性としてタイムスタンプと正規化パターンを保存
+                        li.dataset.executedAt = executedAt;
+                        li.dataset.patternSql = normalizePattern(sql);
+                        sqlList.appendChild(li);
+                        foundSql = true;
+                        updatePatternCount(normalizePattern(sql));
+                    }
+                }
+            }
+
+            if (!foundSql && sqlList.children.length === 0) {
+                showNoResults('SQL文が見つかりませんでした。');
+            }
+        }
+
+        function replaceParams(sql, params) {
+            let replacedSql = sql;
+            for (let i = 0; i < params.length; i++) {
+                const placeholder = new RegExp('\\$' + (i + 1), 'g');
+                let paramValue = params[i];
+                if (typeof paramValue === 'string') {
+                    paramValue = `''${paramValue.replace(/'/g, "''")}''`;
+                } else if (paramValue === null) {
+                    paramValue = 'NULL';
+                } else if (typeof paramValue === 'boolean') {
+                    paramValue = paramValue ? 'TRUE' : 'FALSE';
+                }
+                replacedSql = replacedSql.replace(placeholder, paramValue);
+            }
+            return replacedSql;
+        }
+
+        function normalizePattern(sql) {
+            return sql.replace(/\$\d+/g, '?').replace(/\s+/g, ' ').trim();
+        }
+
+        function updatePatternCount(pattern) {
+            sqlPatterns.set(pattern, (sqlPatterns.get(pattern) || 0) + 1);
+        }
+
+        function addSemicolon(sql) {
+            return sql.trim().endsWith(';') ? sql : sql + ';';
+        }
+
+        function updatePatternList() {
+            patternList.innerHTML = '';
+            if (sqlPatterns.size === 0) {
+                patternList.innerHTML = '<li class="no-results">パターンが見つかりませんでした。</li>';
+                return;
+            }
+            const sortedPatterns = Array.from(sqlPatterns.entries()).sort((a, b) => b[1] - a[1]);
+            sortedPatterns.forEach(([pattern, count]) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${addSemicolon(pattern)} <span class="pattern-count">(×${count})</span>`;
+                // データ属性として正規化パターンを保存
+                li.dataset.patternSql = pattern;
+                patternList.appendChild(li);
+            });
+        }
+
+        async function saveToDB() {
+            saveButton.disabled = true;
+            statusMessage.style.display = 'none';
+
+            // 画面のリストから保存するデータを収集
+            const logsToSave = Array.from(sqlList.children)
+                .filter(li => !li.classList.contains('no-results'))
+                .map(li => ({
+                    executed_at: li.dataset.executedAt,
+                    query_sql: li.textContent
+                }));
+
+            const patternsToSave = Array.from(patternList.children)
+                 .filter(li => !li.classList.contains('no-results'))
+                 .map(li => ({
+                    pattern_sql: li.dataset.patternSql
+                 }));
+
+
+            if (logsToSave.length === 0) {
+                showStatus('保存するデータがありません。', false);
+                saveButton.disabled = false;
+                return;
+            }
+
+            try {
+                // FastAPIエンドポイントにデータを送信
+                const response = await fetch('http://localhost:8001/api/save_queries/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ logs: logsToSave, patterns: patternsToSave })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'サーバーエラーが発生しました。');
+                }
+
+                const result = await response.json();
+                showStatus(`正常に保存されました。ログ: ${result.saved_logs}件, パターン: ${result.saved_patterns}件`, true);
+
+            } catch (error) {
+                showStatus(`エラー: ${error.message}`, false);
+            } finally {
+                saveButton.disabled = false;
+            }
+        }
+
+        function showStatus(message, isSuccess) {
+            statusMessage.textContent = message;
+            statusMessage.className = isSuccess ? 'status-success' : 'status-error';
+            statusMessage.style.display = 'block';
+        }
+
+    </script>
+</body>
+</html>
